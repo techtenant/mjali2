@@ -3,6 +3,7 @@ package com.example.grandmuller.mjali2;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +27,9 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
      * Represents a geographical location.
      */
     private Location mLastLocation;
+    private double latt;
+    private double longit;
 
     /**
      * Tracks whether the user has requested an address. Becomes true when the user requests an
@@ -76,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
      * Kicks off the request to fetch an address when pressed.
      */
     private Button mFetchAddressButton;
+    private  EditText addressname,lat,longi;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +95,12 @@ public class MainActivity extends AppCompatActivity {
         mLocationAddressTextView = (TextView) findViewById(R.id.location_address_view);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mFetchAddressButton = (Button) findViewById(R.id.fetch_address_button);
+        addressname =(EditText)findViewById(R.id.editTextname);
+        lat =(EditText)findViewById(R.id.editTextlatitude);
+
+        longi =(EditText)findViewById(R.id.editTextlongitude);
+
+
 
         // Set defaults, then update using values stored in the Bundle.
         mAddressRequested = false;
@@ -96,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         updateUIWidgets();
+
     }
 
     @Override
@@ -122,7 +137,9 @@ public class MainActivity extends AppCompatActivity {
             // and stored in the Bundle. If it was found, display the address string in the UI.
             if (savedInstanceState.keySet().contains(LOCATION_ADDRESS_KEY)) {
                 mAddressOutput = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
+
                 displayAddressOutput();
+
             }
         }
     }
@@ -142,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         // immediately kicks off the process of getting the address.
         mAddressRequested = true;
         updateUIWidgets();
+
     }
 
     /**
@@ -179,6 +197,8 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         mLastLocation = location;
+                        latt =location.getLatitude();
+                        longit =location.getLongitude();
 
                         // Determine whether a Geocoder is available.
                         if (!Geocoder.isPresent()) {
@@ -202,11 +222,16 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+
     /**
      * Updates the address in the UI.
      */
     private void displayAddressOutput() {
-        mLocationAddressTextView.setText(mAddressOutput);
+        //mLocationAddressTextView.setText(mAddressOutput);
+        addressname.setText(mAddressOutput);
+        lat.setText(String.valueOf(latt));
+        longi.setText(String.valueOf(longit));
+
     }
 
     /**

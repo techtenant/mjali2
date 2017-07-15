@@ -15,13 +15,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/fetch_address"
-        android:onClick="fetchAddressButtonHandler" />
+        android:onClick="fetchAddressButtonHandler"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="130dp" />
 
     <TextView
         android:id="@+id/location_address_view"
@@ -32,5 +36,42 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/text_margin_top"
         android:textSize="@dimen/default_text_size" />
+
+    <EditText
+        android:id="@+id/editTextlatitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="latitude"
+        android:inputType="numberDecimal"
+        android:layout_above="@+id/editTextlongitude"
+        android:layout_alignLeft="@+id/editTextlongitude"
+        android:layout_alignStart="@+id/editTextlongitude" />
+
+    <EditText
+        android:id="@+id/editTextlongitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:text="Longitude"
+        android:layout_above="@+id/fetch_address_button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="58dp"
+        android:layout_marginEnd="58dp"
+        android:layout_marginBottom="33dp" />
+
+    <EditText
+        android:id="@+id/editTextname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/editTextlatitude"
+        android:layout_alignEnd="@+id/editTextlatitude"
+        android:layout_alignRight="@+id/editTextlatitude"
+        android:layout_marginBottom="20dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name" />
 </RelativeLayout>
 
