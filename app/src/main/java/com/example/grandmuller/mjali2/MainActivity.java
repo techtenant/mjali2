@@ -16,11 +16,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.firebase.client.Firebase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
@@ -43,12 +52,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     float acc;
     List<Address> listAddresses;
     String addressHolder;
+    private Firebase firebase;
+    Button btnsubmit;
+    DatabaseReference databaseReference;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Firebase.setAndroidContext(this);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
 
 
         latTV = (TextView) findViewById(R.id.lat);
@@ -58,6 +76,42 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         //bearTV = (TextView) findViewById(R.id.bear);
         accTV = (TextView) findViewById(R.id.acc);
         addressTV = (TextView) findViewById(R.id.address);
+        btnsubmit=(Button)findViewById(R.id.submit);
+
+
+        firebase = new Firebase("https://mefriend-ff835.firebaseio.com/");
+
+
+
+        btnsubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String lat=latTV.getText().toString();
+                String lon=lngTV.getText().toString();
+                String alt=altTV.getText().toString();
+                String acc=accTV.getText().toString();
+                String address=addressTV.getText().toString();
+
+
+                LocationData locationData = new LocationData();
+                locationData.setLatitude(lat);
+                locationData.setLongitude(lon);
+                locationData.setAltitude(alt);
+                locationData.setAccuracy(acc);
+                locationData.setAddress(address);
+
+
+
+                 firebase.child("Mjali2").push().setValue(locationData);
+
+
+                Toast.makeText(MainActivity.this, "Data sent", Toast.LENGTH_SHORT).show();
+                finish();
+
+
+            }
+        });
+
 
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -165,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
                         addressHolder += listAddresses.get(0).getAddressLine(i)+ "\n";
                     }
-                    addressTV.setText("Address: \n" + addressHolder);
+                    addressTV.setText(addressHolder);
                 }
 
             } catch (IOException e) {
@@ -191,12 +245,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
 
 
-            latTV.setText("Latitude: "+ String.valueOf(lat));
-            lngTV.setText("Longitude: "+String.valueOf(lng));
-            altTV.setText("Altitude: "+ alt2 + "m");
+            latTV.setText( String.valueOf(lat));
+            lngTV.setText(String.valueOf(lng));
+            altTV.setText(String.valueOf(alt2));
             //speedTV.setText("Speed: "+ speed2 + "kph");
             //bearTV.setText("Bearing: "+ bear2 + "");
-            accTV.setText("Accuracy: "+ acc + "m");
+            accTV.setText(String.valueOf(acc));
 
             Log.i("Latitude", String.valueOf(lat));
             Log.i("Longitude", String.valueOf(lng));
